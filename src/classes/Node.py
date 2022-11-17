@@ -8,4 +8,7 @@ class Node:
     self.name =json.loads(jsondata)["name"]
     self.port = json.loads(jsondata)["port"]
     pass
+
+  def set_name(self, new_name:str) -> None:
+    self.name = new_name
   pass

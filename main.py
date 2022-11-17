@@ -1,18 +1,10 @@
 import os
 from pathlib import Path
-from random import random
 import sys, getopt
-from flask import Flask
-from src.classes import Node
+from src.classes import Context, Node
 from src.flask_server import start_flask_sever
 
 
-
-
-# @app.route("/")
-# def hello_world():
-#     print("hello")
-#     return f"<p>Hello, I'm </p> "
 
 def main(argv):
   # Read cli args
@@ -33,13 +25,17 @@ def main(argv):
   
   print(sys.argv)
 
-  me = Node(Path(env_file))
+  current_node = Node(Path(env_file))
 
-  start_flask_sever(port=me.port, debug=True)
+  # Create context
+  context = Context(node=current_node)
+
+  # starting Flask web server
+  start_flask_sever(context=context, port=current_node.port, debug=True)
   pass
 
 if __name__ == "__main__":
-  # Clearing the sonsole
-    os.system('clear')
+    # Clearing the sonsole
+    # os.system('clear')
     main(sys.argv[1:])
     pass
