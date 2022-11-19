@@ -3,8 +3,11 @@ from src.classes.Blcok import Block
 
 
 class BlockChain:
-  def __init__(self) -> None: 
-    jsondata = open("./blockchain.json", 'r')
-    root_block_data =json.load(jsondata)["root"]
-    self.root = Block(root_block_data["data"], root_block_data["hash"])
-    pass
+    """
+    Class reperesenting Block chain
+    """
+
+    def __init__(self) -> None:
+        with open("./blockchain.json", 'rb') as file:
+            root_block_data = json.load(file)["root"]
+            self.root = Block(root_block_data["data"], root_block_data["hash"])

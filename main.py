@@ -1,41 +1,41 @@
-import os
 from pathlib import Path
-import sys, getopt
+import sys
+import getopt
 from src.classes import Context, Node
 from src.flask_server import start_flask_sever
 
 
-
 def main(argv):
-  # Read cli args
-  env_file = ''
-  try:
-    (opts, args )= getopt.getopt(argv,"he:",["efile="])
-  except getopt.GetoptError:
-    sys.exit(2)
-  for opt, arg in opts:
-    if opt == '-h':
-      print('test.py -e nodeDefault.json')
-      sys.exit()
-    elif opt in ("-e", "--env"):
-      env_file = arg
-    else:
-      env_file = './config_files/nodeDefault.json'
-      pass
-  
-  print(sys.argv)
+    """
+    Main method
+    """
 
-  current_node = Node(Path(env_file))
+    env_file = ''
+    try:
+        (opts, _) = getopt.getopt(argv, "he:", ["efile="])
+    except getopt.GetoptError:
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('test.py -e nodeDefault.json')
+            sys.exit()
+        elif opt in ("-e", "--env"):
+            env_file = arg
+        else:
+            env_file = './config_files/nodeDefault.json'
 
-  # Create context
-  context = Context(node=current_node)
+    print(sys.argv)
 
-  # starting Flask web server
-  start_flask_sever(context=context, port=current_node.port, debug=True)
-  pass
+    current_node = Node(Path(env_file))
+
+    # Create context
+    context = Context(node=current_node)
+
+    # starting Flask web server
+    start_flask_sever(context=context, port=current_node.port, debug=True)
+
 
 if __name__ == "__main__":
     # Clearing the sonsole
     # os.system('clear')
     main(sys.argv[1:])
-    pass
