@@ -1,5 +1,5 @@
 import json
-from src.classes.Blcok import Block
+from src.classes.Block import Block
 
 
 class BlockChain:

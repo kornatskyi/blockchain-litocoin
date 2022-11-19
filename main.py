@@ -11,6 +11,7 @@ def main(argv):
     """
 
     env_file = ''
+    
     try:
         (opts, _) = getopt.getopt(argv, "he:", ["efile="])
     except getopt.GetoptError:
