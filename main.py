@@ -1,18 +1,33 @@
+import json
 from pathlib import Path
 import sys
 import getopt
-from src.classes import Context, Node
+from src.classes.Block import Block
+from src.classes.BlockChain import BlockChain
+from src.classes.Context import Context
+from src.classes.Node import Node, generate_block
+from src.constants import REPO_PATH
 from src.flask_server import start_flask_sever
 
-BLOCKCHAIN_FILE_PATH="./blockchain/blockchain.json"
+# blockchain = BlockChain(Path(REPO_PATH) / "blockchain/blockchain.json")
+
+# blockchain.load_blockchain_from_file()
+
+# blockchain.validate_blockchain()
+
+# genesis_block = Block("genesis block", "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9", 0, 0)
+
+# new_block = generate_block(genesis_block,"new block data", 2)
+# print(new_block.toJSON())
+
 
 def main(argv):
     """
     Main method
     """
 
-    env_file = ''
-    
+    config_file = ''
+
     try:
         (opts, _) = getopt.getopt(argv, "he:", ["efile="])
     except getopt.GetoptError:
@@ -22,12 +37,12 @@ def main(argv):
             print('test.py -e nodeDefault.json')
             sys.exit()
         elif opt in ("-e", "--env"):
-            env_file = arg
+            config_file = arg
         else:
-            env_file = './config_files/nodeDefault.json'
+            config_file = './config_files/nodeDefault/nodeDefault.json'
 
     # Create a current node
-    current_node = Node(Path(env_file), Path(BLOCKCHAIN_FILE_PATH))
+    current_node = Node(Path(REPO_PATH) / config_file)
 
     # Create context
     context = Context(node=current_node)

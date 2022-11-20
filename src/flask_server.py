@@ -20,10 +20,9 @@ def start_flask_sever(context: Context, port: int, debug: bool):
         print("Response text:" + response.text)
         return f"Triggered node has name {response.text}"
 
-    @app.route("/")
-    def hello_world():
-        print("hello")
-        return "<p>Hello, I'm sdf </p> "
+    @app.route("/blockchain")
+    def blockchain():
+        return f"Current blockchain: {context.node.blockchain}"
 
     @app.route("/name")
     def get_node_name():
