@@ -4,6 +4,7 @@ import getopt
 from src.classes import Context, Node
 from src.flask_server import start_flask_sever
 
+BLOCKCHAIN_FILE_PATH="./blockchain/blockchain.json"
 
 def main(argv):
     """
@@ -25,9 +26,8 @@ def main(argv):
         else:
             env_file = './config_files/nodeDefault.json'
 
-    print(sys.argv)
-
-    current_node = Node(Path(env_file))
+    # Create a current node
+    current_node = Node(Path(env_file), Path(BLOCKCHAIN_FILE_PATH))
 
     # Create context
     context = Context(node=current_node)
