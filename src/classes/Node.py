@@ -11,12 +11,16 @@ class Node:
     Represend node on a blockchain
     """
 
-    def __init__(self, config_file_path: Path):
-        jsondata = config_file_path.read_text()
+    def __init__(self, config_dir_path: Path):
+        self.config_file_path = Path(config_dir_path) / "config.json"
+        assert self.config_file_path.exists(), f"No config file in a directory {config_dir_path}"
+        jsondata = self.config_file_path.read_text()
         self.name = json.loads(jsondata)["name"]
         self.port = json.loads(jsondata)["port"]
+        
         self.blockchain_file_path = Path(
-            REPO_PATH) / config_file_path.__str__() / "blockchain.json"
+            REPO_PATH) / config_dir_path.__str__() / "blockchain.json"
+        assert self.blockchain_file_path.exists(), f"No blockchain file in {self.blockchain_file_path.__str__()}"
         self.blockchain = BlockChain(self.blockchain_file_path)
 
     def set_name(self, new_name: str) -> None:

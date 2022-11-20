@@ -15,7 +15,7 @@ class BlockChain:
         self.root_block = None
         self.blocks: list[Block] = []
 
-    def load_blockchain_from_file(self):
+    def load_blockchain_from_file(self) -> None:
         """
         Loads blockchain from file to the memory
         """

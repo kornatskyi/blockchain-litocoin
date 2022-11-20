@@ -9,7 +9,7 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
-      "args": ["-e", "${workspaceFolder}/config_files/node0/node0.json"],
+      "args": ["--config", "${workspaceFolder}/config_files/node0/"],
       "console": "integratedTerminal",
       "justMyCode": true,
       "env": {
@@ -21,7 +21,7 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/src/main.py",
-      "args": ["-e", "${workspaceFolder}/config_files/node1/node1.json"],
+      "args": ["--config", "${workspaceFolder}/config_files/node1/"],
       "console": "integratedTerminal",
       "justMyCode": true
     }

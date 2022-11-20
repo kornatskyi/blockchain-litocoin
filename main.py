@@ -26,23 +26,21 @@ def main(argv):
     Main method
     """
 
-    config_file = ''
+    config_dir = ''
 
     try:
-        (opts, _) = getopt.getopt(argv, "he:", ["efile="])
+        (opts, _) = getopt.getopt(argv, "hc:", ["config="])
     except getopt.GetoptError:
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('test.py -e nodeDefault.json')
             sys.exit()
-        elif opt in ("-e", "--env"):
-            config_file = arg
+        elif opt in ("-c", "--config"):
+            config_dir = arg
         else:
-            config_file = './config_files/nodeDefault/nodeDefault.json'
-
+           raise Exception("Wrong command line arguments")
     # Create a current node
-    current_node = Node(Path(REPO_PATH) / config_file)
+    current_node = Node(Path(REPO_PATH) / config_dir)
 
     # Create context
     context = Context(node=current_node)
