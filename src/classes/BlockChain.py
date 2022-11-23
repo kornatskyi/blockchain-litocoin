@@ -39,6 +39,13 @@ class BlockChain:
         for i in range(1, len(self.blocks)):
             prev_block = self.blocks[i - 1]
             validate_block_hash(self.blocks[i], prev_block.block_hash)
+    
+    def get_last_block(self) -> Block:
+        """
+        Return the latst(best) block from the blockchain
+        """
+        return self.blocks[-1]
+
 
 
 def validate_block_hash(block: Block, prev_block_hash: str):

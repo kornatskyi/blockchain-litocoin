@@ -10,6 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
       "args": ["--config", "${workspaceFolder}/config_files/node0/"],
+      // "console": "externalTerminal",
       "console": "integratedTerminal",
       "justMyCode": true,
       "env": {
@@ -22,7 +23,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/src/main.py",
       "args": ["--config", "${workspaceFolder}/config_files/node1/"],
-      "console": "integratedTerminal",
+      "console": "externalTerminal",
       "justMyCode": true
     }
   ]

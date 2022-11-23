@@ -3,6 +3,7 @@ from pathlib import Path
 from src.classes.Block import Block
 from src.classes.BlockChain import BlockChain
 from src.constants import REPO_PATH
+from src.rules import NUMBER_OF_LEADING_ZEROS
 from src.utils.cryptography import sha256
 
 
@@ -34,6 +35,20 @@ class Node:
         Returns blockchain to which this node refers to
         """
         return self.blockchain
+    
+    def generate_block(self, block_data: str) -> Block:
+        """
+        Node generates new block
+        """
+        new_block = generate_block(self.blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
+        return new_block
+    
+    def write_to_blockchain_file(self):
+        """
+        Write blockchain from memory to the file
+        """
+        pass 
+
 
 
 def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zeros: int) -> Block:

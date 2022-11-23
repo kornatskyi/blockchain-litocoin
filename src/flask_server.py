@@ -2,9 +2,8 @@
 Imports
 """
 
-import json
 import requests
-from flask import Flask, request
+from flask import Flask, request, Response
 from src.classes.Context import Context
 
 
@@ -21,13 +20,28 @@ def start_flask_sever(context: Context, port: int, debug: bool):
         response = requests.get('http://localhost:5000/name', timeout=5)
         print("Response text:" + response.text)
         return f"Triggered node has name {response.text}"
+    
+    @app.route("/generate-block")
+    def generate_block():
+        new_block = context.node.generate_block("New1 block")
+        block_json = new_block.toJSON()
+        return Response(block_json)
+        pass
 
     @app.route("/blockchain")
     def blockchain():
+        message = ""
+        failed = False
+        try:
+            context.node.blockchain.load_blockchain_from_file()
+        except Exception as exception:
+            failed = True
+            message = exception.__str__()
+        if failed:
+            return f"<h3 style=\"color:red\">Failed to load blockchain</h3><p>Error message:{message}</p>"
         blockchain_json = [block.toJSON()
                            for block in context.node.blockchain.blocks]
-        print(json.dumps(blockchain_json))
-        return f"<p>Current blockchain: {json.dumps(blockchain_json)}</p>"
+        return Response(blockchain_json) 
 
     @app.route("/load-blockchain")
     def load_blockchain():
