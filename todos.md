@@ -17,7 +17,7 @@
   - node returns its blockchain ✔
 - Main a block
   - main a block ✔
-  - add block to the blockchain
+  - add block to the blockchain ✔
 - Propagate mained blocks among peers
 - Listen for mained blocks
 - Create "transaction"

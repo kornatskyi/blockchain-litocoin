@@ -21,10 +21,16 @@
       "name": "Node1",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/src/main.py",
+      "program": "${workspaceFolder}/main.py",
       "args": ["--config", "${workspaceFolder}/config_files/node1/"],
-      "console": "externalTerminal",
+      "console": "integratedTerminal",
       "justMyCode": true
     }
-  ]
+  ],
+    "compounds": [
+      {
+        "name": "Run two nodes",
+        "configurations": ["Node0", "Node1"]
+      }
+    ]
 }

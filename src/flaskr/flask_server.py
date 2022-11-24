@@ -2,18 +2,44 @@
 Imports
 """
 
+import os
 import requests
 from flask import Flask, request, Response
 from src.classes.Context import Context
 
+from .node_routes import node_routes
 
-def start_flask_sever(context: Context, port: int, debug: bool):
+def create_app(context: Context, test_config=None):
     """
-    Flask routs
+    Create and configure the app
     """
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        # SECRET_KEY='dev',
+        # DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    )
 
-    # Create flas app
-    app = Flask(__name__)
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        # load the test config if passed in
+        app.config.from_mapping(test_config)
+
+    # ensure the instance folder exists
+    # for more details go here https://flask.palletsprojects.com/en/2.2.x/tutorial/factory/
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    # ----- Register blueprints ----- #
+    app.register_blueprint(blueprint=node_routes)
+
+    # ----- Root level routes ----- #
+    @app.route('/hello')
+    def hello():
+        return 'Hello, World!'
 
     @app.route("/trigger")
     def trigger():
@@ -69,5 +95,6 @@ def start_flask_sever(context: Context, port: int, debug: bool):
         context.node.set_name(new_name)
         return f"New name '{new_name}' succsesfully set"
 
-    print(f"Flask server is running on port {port}")
-    app.run(port=port, debug=debug)
+
+    return app
+
