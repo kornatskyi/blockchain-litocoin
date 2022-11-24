@@ -46,7 +46,7 @@ def main(argv):
     context = Context(node=current_node)
 
     # starting Flask web server
-    start_flask_sever(context=context, port=current_node.port, debug=True)
+    start_flask_sever(context=context, port=current_node._port, debug=True)
 
 
 if __name__ == "__main__":

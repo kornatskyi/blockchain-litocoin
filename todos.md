@@ -11,19 +11,22 @@
 
 ## What user can do
 
-- Run a node
+- Run a node ✔
 - Scan network for other peers
 - Request blockchain from other peers
+  - node returns its blockchain ✔
 - Main a block
-- Propagete mained blocks among peers
+  - main a block ✔
+  - add block to the blockchain
+- Propagate mained blocks among peers
 - Listen for mained blocks
 - Create "transaction"
-- List all transactins in a network
-- Rules for validating blockchain
+- List all transactions in a network
+- Rules blockchain validation
 
 
 ### How to discover peers?
-There should be hardcoded peers addreses to discover at least some peers on the first run
+There should be hardcoded peers address to discover at least some peers on the first run
 After that, node can maintain it's own list of peers, and connect to them each time it needs
 Each node will share it's list of peers with other nodes
 
@@ -31,8 +34,3 @@ Each node will share it's list of peers with other nodes
 Send the hash of a last block you have (genesis block it it's firs time download)
 The peer will validate and will send back a block it has after the hash you sent
 And actually the peer can send back more than 1 block
-
-
-
-
-

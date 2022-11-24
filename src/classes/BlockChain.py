@@ -3,51 +3,74 @@ from pathlib import Path
 from src.classes.Block import Block
 from src.utils.cryptography import sha256
 
-
-
 class BlockChain:
     """
     Class reperesenting Block chain
     """
 
     def __init__(self, blockchain_file_path: Path) -> None:
-        self.blockchain_file_path = blockchain_file_path
-        self.root_block = None
-        self.blocks: list[Block] = []
+        self._blockchain_file_path = blockchain_file_path
+        self._root_block = None
+        self._blocks: list[Block] = []
+    
+    def get_blocks(self) -> list[Block]:
+        """
+        Returns blockchain blocks
+        """
+        return self._blocks 
 
-    def load_blockchain_from_file(self) -> None:
+    def load_blockchain_from_the_file(self) -> None:
         """
         Loads blockchain from file to the memory
         """
         blocks_json = None
-        self.blocks = []
-        with open(self.blockchain_file_path, 'rb') as file:
-            blocks_json = json.load(file)["blocks"]
+        self._blocks = []
+        with open(self._blockchain_file_path, mode='r', encoding="utf-8") as file:
+            blocks_json = json.load(file)
         for block_json in blocks_json:
             loaded_block = Block(block_json["data"],
-                                 block_json["hash"],
+                                 block_json["block_hash"],
                                  int(block_json["nonce"]),
                                  int(block_json["height"]))
-            self.blocks.append(loaded_block)
+            self._blocks.append(loaded_block)
+
+    def write_blockchain_to_the_file(self) -> None:
+        """
+        Writes all blockchain from the memory to the file in json format
+        """
+        blocks_dict = [block.__dict__ for block in self._blocks]
+
+        with open(self._blockchain_file_path, mode='w', encoding="utf-8") as file:
+            file.write(json.dumps(blocks_dict, sort_keys=True, indent=4))
 
     def validate_blockchain(self):
         """
         Validates all blocks in blockchain
         """
         # sort blocks firs by its height
-        self.blocks.sort(key=lambda block: block.height)
-        for i in range(1, len(self.blocks)):
-            prev_block = self.blocks[i - 1]
-            validate_block_hash(self.blocks[i], prev_block.block_hash)
+        self._blocks.sort(key=lambda block: block.height)
+        for i in range(1, len(self._blocks)):
+            prev_block = self._blocks[i - 1]
+            if not is_block_hash_valid(self._blocks[i], prev_block.block_hash):
+                raise Exception("Fail to validation. Blockchain ins't valid!")
     
     def get_last_block(self) -> Block:
         """
-        Return the latst(best) block from the blockchain
+        Return the last(best) block from the blockchain
         """
-        return self.blocks[-1]
+        return self._blocks[-1]
+
+    def add_a_block(self, block: Block) -> None:
+        """
+        Adds block to the blockchain
+        """
+        self._blocks.append(block)
 
 
 
-def validate_block_hash(block: Block, prev_block_hash: str):
-    assert block.block_hash == sha256(prev_block_hash + block.get_block_data_string())
+def is_block_hash_valid(block: Block, prev_block_hash: str) -> bool:
+    """
+    Validates if block hash is valid
+    """
+    return block.block_hash == sha256(prev_block_hash + block.get_block_data_string())
 

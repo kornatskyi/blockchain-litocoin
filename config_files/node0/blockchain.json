@@ -1,16 +1,62 @@
-{
-  "blocks" :  [
+[
     {
-      "data":"genesis block",
-      "hash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
-      "nonce":0,
-      "height":0
+        "block_hash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "data": "genesis block",
+        "height": 0,
+        "nonce": 0
     },
     {
-      "hash": "00060fcd52690559ef733cb3bb4a5094690965e7194ab0fc6818ea6a5f23e1fb",
-      "data": "new block data",
-      "height": 1,
-      "nonce": 129
+        "block_hash": "00060fcd52690559ef733cb3bb4a5094690965e7194ab0fc6818ea6a5f23e1fb",
+        "data": "new block data",
+        "height": 1,
+        "nonce": 129
+    },
+    {
+        "block_hash": "00f9eadd9b05e5720d2bbbd09f9bea1ff691b05f0d15adc61c2220451b92c7b6",
+        "data": "New1 block",
+        "height": 2,
+        "nonce": 527
+    },
+    {
+        "block_hash": "00c489e93c70aab3d747bba40aae110b00bc0c414b3bf376b5a65ba48d0ba85b",
+        "data": "New1 block",
+        "height": 3,
+        "nonce": 144
+    },
+    {
+        "block_hash": "000e6b636d79a842b09c599198a67d0a964ef97f03406a66057b0facba803da6",
+        "data": "New1 block",
+        "height": 4,
+        "nonce": 451
+    },
+    {
+        "block_hash": "00cebbc5cc30ac5718a54e5312f354f7f54d9172e243d19ce2e904e4d89c5d96",
+        "data": "New1 block",
+        "height": 5,
+        "nonce": 118
+    },
+    {
+        "block_hash": "0030895453eab36347c5c0e91938ad604df5455369f8905d2ab876ffb29b0b93",
+        "data": "New1 block",
+        "height": 6,
+        "nonce": 68
+    },
+    {
+        "block_hash": "003ca61aa0c50af45af095631ba3a50a07bd451c434b5222cc8dd88ca7917488",
+        "data": "New1 block",
+        "height": 7,
+        "nonce": 968
+    },
+    {
+        "block_hash": "00cc9990ab157934a9eb392953487610cdc172fb30a37e2b7708f4a0cc515f68",
+        "data": "New1 block",
+        "height": 8,
+        "nonce": 1
+    },
+    {
+        "block_hash": "004c599d0e8de7dfbedd917f1f6d2c389604f7a0f2875ee9575cdefea5e06f76",
+        "data": "New1 block",
+        "height": 9,
+        "nonce": 714
     }
-  ]
-}
+]

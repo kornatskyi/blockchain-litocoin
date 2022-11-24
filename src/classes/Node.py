@@ -9,45 +9,46 @@ from src.utils.cryptography import sha256
 
 class Node:
     """
-    Represend node on a blockchain
+    Represent node on a blockchain
     """
 
     def __init__(self, config_dir_path: Path):
-        self.config_file_path = Path(config_dir_path) / "config.json"
-        assert self.config_file_path.exists(), f"No config file in a directory {config_dir_path}"
-        jsondata = self.config_file_path.read_text()
-        self.name = json.loads(jsondata)["name"]
-        self.port = json.loads(jsondata)["port"]
+        self._config_file_path = Path(config_dir_path) / "config.json"
+        assert self._config_file_path.exists(), f"No config file in a directory {config_dir_path}"
+        jsondata = self._config_file_path.read_text()
+        self._name = json.loads(jsondata)["name"]
+        self._port = json.loads(jsondata)["port"]
         
-        self.blockchain_file_path = Path(
+        self._blockchain_file_path = Path(
             REPO_PATH) / config_dir_path.__str__() / "blockchain.json"
-        assert self.blockchain_file_path.exists(), f"No blockchain file in {self.blockchain_file_path.__str__()}"
-        self.blockchain = BlockChain(self.blockchain_file_path)
+
+        assert self._blockchain_file_path.exists(), f"No blockchain file in {self._blockchain_file_path.__str__()}"
+
+        self._blockchain = BlockChain(self._blockchain_file_path)
 
     def set_name(self, new_name: str) -> None:
         """
         Name setter
         """
-        self.name = new_name
+        self._name = new_name
+    def get_name(self) -> str:
+        """
+        Get nodes name
+        """
+        return self._name
 
     def get_blockchain(self):
         """
         Returns blockchain to which this node refers to
         """
-        return self.blockchain
+        return self._blockchain
     
     def generate_block(self, block_data: str) -> Block:
         """
         Node generates new block
         """
-        new_block = generate_block(self.blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
+        new_block = generate_block(self._blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
         return new_block
-    
-    def write_to_blockchain_file(self):
-        """
-        Write blockchain from memory to the file
-        """
-        pass 
 
 
 
@@ -55,7 +56,7 @@ def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zer
     """
     Generate new block with special hash, which has leading zeros
     BLOCK DATA ORDER for hashing:
-    (everething is string type)
+    (everything is string type)
     0. Previous block hash
     1. New block data(message)
     2. New height in string format

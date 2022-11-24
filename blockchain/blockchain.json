@@ -1,16 +1,14 @@
-{
-  "blocks" :  [
-    {
-      "data":"genesis block",
-      "hash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
-      "nonce":0,
-      "height":0
-    },
-    {
-      "hash": "00060fcd52690559ef733cb3bb4a5094690965e7194ab0fc6818ea6a5f23e1fb",
-      "data": "new block data",
-      "height": 1,
-      "nonce": 129
-    }
-  ]
-}
+[
+  {
+    "data":"genesis block",
+    "block_hash": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "nonce":0,
+    "height":0
+  },
+  {
+    "block_hash": "00060fcd52690559ef733cb3bb4a5094690965e7194ab0fc6818ea6a5f23e1fb",
+    "data": "new block data",
+    "height": 1,
+    "nonce": 129
+  }
+]
