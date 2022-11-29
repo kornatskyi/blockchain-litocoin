@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from src.classes.Singleton import Singleton
 from src.classes.Block import Block
 from src.classes.BlockChain import BlockChain
 from src.constants import REPO_PATH
@@ -7,22 +8,23 @@ from src.rules import NUMBER_OF_LEADING_ZEROS
 from src.utils.cryptography import sha256
 
 
-class Node:
+class Node(metaclass=Singleton):
     """
     Represent node on a blockchain
     """
-
-    def __init__(self, config_dir_path: Path):
+    def __init__(self, config_dir_path:Path=None):
         self._config_file_path = Path(config_dir_path) / "config.json"
-        assert self._config_file_path.exists(), f"No config file in a directory {config_dir_path}"
+        assert self._config_file_path.exists(
+        ), f"No config file in a directory {config_dir_path}"
         jsondata = self._config_file_path.read_text()
         self._name = json.loads(jsondata)["name"]
         self._port = json.loads(jsondata)["port"]
-        
+
         self._blockchain_file_path = Path(
             REPO_PATH) / config_dir_path.__str__() / "blockchain.json"
 
-        assert self._blockchain_file_path.exists(), f"No blockchain file in {self._blockchain_file_path.__str__()}"
+        assert self._blockchain_file_path.exists(
+        ), f"No blockchain file in {self._blockchain_file_path.__str__()}"
 
         self._blockchain = BlockChain(self._blockchain_file_path)
 
@@ -31,25 +33,32 @@ class Node:
         Name setter
         """
         self._name = new_name
+
     def get_name(self) -> str:
         """
         Get nodes name
         """
         return self._name
+    
+    def get_port(self) -> int:
+        """
+        Get a port for this node's server 
+        """
+        return self._port
 
     def get_blockchain(self):
         """
         Returns blockchain to which this node refers to
         """
         return self._blockchain
-    
+
     def generate_block(self, block_data: str) -> Block:
         """
         Node generates new block
         """
-        new_block = generate_block(self._blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
+        new_block = generate_block(
+            self._blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
         return new_block
-
 
 
 def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zeros: int) -> Block:

@@ -1,7 +1,6 @@
 from pathlib import Path
 import sys
 import getopt
-from src.classes.Context import Context
 from src.classes.Node import Node
 from src.constants import REPO_PATH
 from src.flaskr.flask_server import create_app
@@ -23,18 +22,17 @@ def main(argv):
             config_dir = arg
         else:
            raise Exception("Wrong command line arguments")
-    # Create a current node
-    current_node = Node(Path(REPO_PATH) / config_dir)
 
-    # Create context
-    context = Context(node=current_node)
+    # Initialise singleton instance of a node 
+    current_node = Node(Path(REPO_PATH) / config_dir)
+    
 
     # starting Flask web server
     # start_flask_sever(context=context, port=current_node._port, debug=True)
-    app = create_app(context=context)
+    app = create_app()
 
-    print(f"Flask server is running on port {current_node._port}")
-    app.run(port=current_node._port, debug=True)
+    print(f"Flask server is running on port {current_node.get_port()}")
+    app.run(port=current_node.get_port(), debug=True)
     
 
 

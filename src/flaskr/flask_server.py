@@ -1,15 +1,13 @@
 """
 Imports
 """
-
 import os
 import requests
 from flask import Flask, request, Response
-from src.classes.Context import Context
-
+from src.classes import Node
 from .node_routes import node_routes
 
-def create_app(context: Context, test_config=None):
+def create_app(test_config=None):
     """
     Create and configure the app
     """
@@ -49,7 +47,7 @@ def create_app(context: Context, test_config=None):
     
     @app.route("/generate-block")
     def generate_block():
-        node = context.node
+        node = Node()
         new_block = node.generate_block("New1 block")
         block_json = new_block.toJSON()
         node.get_blockchain().add_a_block(new_block)
@@ -60,23 +58,25 @@ def create_app(context: Context, test_config=None):
     def blockchain():
         message = ""
         failed = False
+        node = Node()
         try:
-            context.node.get_blockchain().load_blockchain_from_the_file()
+            node.get_blockchain().load_blockchain_from_the_file()
         except Exception as exception:
             failed = True
             message = exception.__str__()
         if failed:
             return f"<h3 style=\"color:red\">Failed to load blockchain</h3><p>Error message:{message}</p>"
         blockchain_json = [block.toJSON()
-                           for block in context.node.get_blockchain().get_blocks()]
+                           for block in node.get_blockchain().get_blocks()]
         return Response(blockchain_json) 
 
     @app.route("/load-blockchain")
     def load_blockchain():
         message = ""
         failed = False
+        node = Node()
         try:
-            context.node.get_blockchain().load_blockchain_from_the_file()
+            node.get_blockchain().load_blockchain_from_the_file()
         except Exception as exception:
             failed = True
             message = exception.__str__()
@@ -87,12 +87,14 @@ def create_app(context: Context, test_config=None):
     @app.route("/name")
     def get_node_name():
         print("hello")
-        return f"{context.node.get_name()}"
+        node = Node()
+        return f"{node.get_name()}"
 
     @app.route("/set/name")
     def set_node_name():
         new_name = request.args.get('name')
-        context.node.set_name(new_name)
+        node = Node()
+        node.set_name(new_name)
         return f"New name '{new_name}' succsesfully set"
 
 
