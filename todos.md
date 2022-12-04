@@ -22,7 +22,7 @@
 - Listen for mained blocks
 - Create "transaction"
 - List all transactions in a network
-- Rules blockchain validation
+- Rules for blockchain validation
 
 
 ### How to discover peers?

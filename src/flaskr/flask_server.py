@@ -2,10 +2,10 @@
 Imports
 """
 import os
-import requests
-from flask import Flask, request, Response
-from src.classes import Node
+from flask import Flask
 from .node_routes import node_routes
+from .info import info_routes
+from .action import action_routes
 
 def create_app(test_config=None):
     """
@@ -33,69 +33,14 @@ def create_app(test_config=None):
 
     # ----- Register blueprints ----- #
     app.register_blueprint(blueprint=node_routes)
+    app.register_blueprint(blueprint=info_routes)
+    app.register_blueprint(blueprint=action_routes)
 
     # ----- Root level routes ----- #
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
 
-    @app.route("/trigger")
-    def trigger():
-        response = requests.get('http://localhost:5000/name', timeout=5)
-        print("Response text:" + response.text)
-        return f"Triggered node has name {response.text}"
-    
-    @app.route("/generate-block")
-    def generate_block():
-        node = Node()
-        new_block = node.generate_block("New1 block")
-        block_json = new_block.toJSON()
-        node.get_blockchain().add_a_block(new_block)
-        node.get_blockchain().write_blockchain_to_the_file()
-        return Response(block_json)
-
-    @app.route("/blockchain")
-    def blockchain():
-        message = ""
-        failed = False
-        node = Node()
-        try:
-            node.get_blockchain().load_blockchain_from_the_file()
-        except Exception as exception:
-            failed = True
-            message = exception.__str__()
-        if failed:
-            return f"<h3 style=\"color:red\">Failed to load blockchain</h3><p>Error message:{message}</p>"
-        blockchain_json = [block.toJSON()
-                           for block in node.get_blockchain().get_blocks()]
-        return Response(blockchain_json) 
-
-    @app.route("/load-blockchain")
-    def load_blockchain():
-        message = ""
-        failed = False
-        node = Node()
-        try:
-            node.get_blockchain().load_blockchain_from_the_file()
-        except Exception as exception:
-            failed = True
-            message = exception.__str__()
-        if failed:
-            return f"<h3 style=\"color:red\">Failed to load blockchain</h3><p>Error message:{message}</p>"
-        return "<h3 style=\"color:green\">Blockchain loaded sucsesfully.</h3>"
-
-    @app.route("/name")
-    def get_node_name():
-        print("hello")
-        node = Node()
-        return f"{node.get_name()}"
-
-    @app.route("/set/name")
-    def set_node_name():
-        new_name = request.args.get('name')
-        node = Node()
-        node.set_name(new_name)
-        return f"New name '{new_name}' succsesfully set"
 
 
     return app
