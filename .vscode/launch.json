@@ -25,12 +25,21 @@
       "args": ["--config", "${workspaceFolder}/config_files/node1/"],
       "console": "integratedTerminal",
       "justMyCode": true
+    },
+    {
+      "name": "Node2",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "args": ["--config", "${workspaceFolder}/config_files/node2/"],
+      "console": "integratedTerminal",
+      "justMyCode": true
     }
   ],
     "compounds": [
       {
-        "name": "Run two nodes",
-        "configurations": ["Node0", "Node1"]
+        "name": "Run multible nodes",
+        "configurations": ["Node0", "Node1", "Node2"]
       }
     ]
 }

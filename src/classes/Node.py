@@ -1,5 +1,14 @@
+# Standard libs
 import json
 from pathlib import Path
+from enum import Enum
+import urllib.parse
+from src.classes.Enums import PeerStatus 
+
+# Third party libs
+import requests
+
+# My imports
 from src.classes.Singleton import Singleton
 from src.classes.Block import Block
 from src.classes.BlockChain import BlockChain
@@ -13,19 +22,28 @@ class Node(metaclass=Singleton):
     Represent node on a blockchain
     """
     def __init__(self, config_dir_path:Path=None):
+        # Path to configuration file with persistent information
         self._config_file_path = Path(config_dir_path) / "config.json"
         assert self._config_file_path.exists(
         ), f"No config file in a directory {config_dir_path}"
         jsondata = self._config_file_path.read_text()
-        self._name = json.loads(jsondata)["name"]
-        self._port = json.loads(jsondata)["port"]
 
+        # Nodes name
+        self._name = json.loads(jsondata)["name"]
+        # Port on which node's flask server will be running
+        self._port = json.loads(jsondata)["port"]
+        # Peers URIs know to the node
+        self._known_peers = json.loads(jsondata)["known_peers"]
+        # Availability status of a node to a network
+        self._status = PeerStatus.ONLINE
+        # Path to the file with persisted blockchain data
         self._blockchain_file_path = Path(
             REPO_PATH) / config_dir_path.__str__() / "blockchain.json"
-
+    
         assert self._blockchain_file_path.exists(
         ), f"No blockchain file in {self._blockchain_file_path.__str__()}"
 
+        # Dynamic(stored in memory(RAM)) blockchain
         self._blockchain = BlockChain(self._blockchain_file_path)
 
     def set_name(self, new_name: str) -> None:
@@ -39,6 +57,12 @@ class Node(metaclass=Singleton):
         Get nodes name
         """
         return self._name
+    
+    def get_status(self) -> PeerStatus:
+        """
+        Node status getter
+        """
+        return self._status
     
     def get_port(self) -> int:
         """
@@ -59,6 +83,25 @@ class Node(metaclass=Singleton):
         new_block = generate_block(
             self._blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
         return new_block
+
+    def check_peers_status(self)-> dict[str, PeerStatus]:
+        """
+        Return status of known peers
+        """
+        peers_status = dict[str, PeerStatus]()
+        for peer_url in self._known_peers:
+            try:
+                # Send request to the know peer URI, to know it's status
+                response = requests.get(urllib.parse.urljoin(peer_url, "info/status"), timeout=3)
+                if response.status_code >= 200 and response.status_code < 300:
+                    peers_status[peer_url] = PeerStatus.ONLINE
+                else:
+                    peers_status[peer_url] = PeerStatus.OFFLINE
+            except requests.exceptions.ConnectionError:
+                peers_status[peer_url] = PeerStatus.OFFLINE
+            except:
+                peers_status[peer_url] = PeerStatus.WRONG_RESPONSE
+        return peers_status
 
 
 def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zeros: int) -> Block:

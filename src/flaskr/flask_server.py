@@ -37,6 +37,10 @@ def create_app(test_config=None):
     app.register_blueprint(blueprint=action_routes)
 
     # ----- Root level routes ----- #
+    @app.route('/')
+    def default():
+        return 'online'
+
     @app.route('/hello')
     def hello():
         return 'Hello, World!'

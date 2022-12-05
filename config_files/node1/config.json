@@ -1,4 +1,9 @@
 {
-  "name": "Node1",
-  "port": "5001"
+  "name": "Node2",
+  "port": "5002",
+  "known_peers": [
+    "http://localhost:5000",
+    "http://localhost:5002"
+
+  ]
 }
