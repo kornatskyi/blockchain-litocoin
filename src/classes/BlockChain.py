@@ -5,7 +5,7 @@ from src.utils.cryptography import sha256
 
 class BlockChain:
     """
-    Class reperesenting Block chain
+    Class representing Block chain
     """
 
     def __init__(self, blockchain_file_path: Path) -> None:
@@ -33,6 +33,22 @@ class BlockChain:
                                  int(block_json["nonce"]),
                                  int(block_json["height"]))
             self._blocks.append(loaded_block)
+
+    def load_blockchain_from_the_json(self, blocks_json:str) -> None:
+        """
+        Loads blockchain from the json
+        !!! TODO need a better way to handle blockchain in json format
+        """
+        self._blocks = []
+        blocks_json = json.loads(blocks_json)
+        for block_json in blocks_json:
+            block_json = json.loads(block_json)
+            loaded_block = Block(block_json["data"],
+                                    block_json["block_hash"],
+                                    block_json["nonce"],
+                                    block_json["height"])
+            self._blocks.append(loaded_block)
+
 
     def write_blockchain_to_the_file(self) -> None:
         """
@@ -65,7 +81,6 @@ class BlockChain:
         Adds block to the blockchain
         """
         self._blocks.append(block)
-
 
 
 def is_block_hash_valid(block: Block, prev_block_hash: str) -> bool:

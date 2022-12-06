@@ -33,3 +33,12 @@ def load_blockchain():
     if failed:
         return f"<h3 style=\"color:red\">Failed to load blockchain</h3><p>Error message:{message}</p>"
     return "<h3 style=\"color:green\">Blockchain loaded successfully.</h3>"
+
+@action_routes.route("update-blockchain")
+def update_blockchain():
+    """
+    Updates blockchain by requesting most recent blocks from the known peers
+    """
+    node = Node()
+    node.update_blockchain()
+    return Response(node.get_blockchain())

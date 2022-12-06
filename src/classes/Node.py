@@ -1,7 +1,6 @@
 # Standard libs
 import json
 from pathlib import Path
-from enum import Enum
 import urllib.parse
 from src.classes.Enums import PeerStatus 
 
@@ -34,6 +33,8 @@ class Node(metaclass=Singleton):
         self._port = json.loads(jsondata)["port"]
         # Peers URIs know to the node
         self._known_peers = json.loads(jsondata)["known_peers"]
+        # Set of online peers
+        self._online_peers = set[str]()
         # Availability status of a node to a network
         self._status = PeerStatus.ONLINE
         # Path to the file with persisted blockchain data
@@ -45,6 +46,8 @@ class Node(metaclass=Singleton):
 
         # Dynamic(stored in memory(RAM)) blockchain
         self._blockchain = BlockChain(self._blockchain_file_path)
+        # Load blockchain
+        self._blockchain.load_blockchain_from_the_file()
 
     def set_name(self, new_name: str) -> None:
         """
@@ -102,7 +105,31 @@ class Node(metaclass=Singleton):
             except:
                 peers_status[peer_url] = PeerStatus.WRONG_RESPONSE
         return peers_status
+    
+    def update_online_peers(self) -> None:
+        """
+        Check what peers are online, and updates set of online peers 
+        """
+        peers_by_status = self.check_peers_status()
+        for (peer, status) in peers_by_status.items():
+            if status == PeerStatus.ONLINE:
+                self._online_peers.add(peer) 
+            else:
+                self._online_peers.pop(peer)
 
+    def update_blockchain(self):
+        """
+        Updates blockchain by requesting most recent blocks from the known peers
+        """
+        blockchain_json: BlockChain
+        self.update_online_peers()
+        for peer_url in self._online_peers:
+            json_l =  requests.get(urllib.parse.urljoin(peer_url, "info/blockchain"), timeout=3).text
+            if len(json.loads(json_l)) > len(self._blockchain.get_blocks()):
+                blockchain_json = json_l
+        
+        if len(json.loads(blockchain_json)) > len(self._blockchain.get_blocks()):
+                self._blockchain.load_blockchain_from_the_json(blockchain_json)
 
 def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zeros: int) -> Block:
     """
