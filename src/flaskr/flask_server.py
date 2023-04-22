@@ -9,7 +9,7 @@ from .action import action_routes
 
 def create_app(test_config=None):
     """
-    Create and configure the app
+    Create and configure the Flask app
     """
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(

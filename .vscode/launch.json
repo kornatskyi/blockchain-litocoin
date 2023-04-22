@@ -9,7 +9,7 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
-      "args": ["--config", "${workspaceFolder}/config_files/node0/"],
+      "args": ["--config", "${workspaceFolder}/config_files/node0/config.json"],
       // "console": "externalTerminal",
       "console": "integratedTerminal",
       "justMyCode": true,
@@ -22,7 +22,7 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
-      "args": ["--config", "${workspaceFolder}/config_files/node1/"],
+      "args": ["--config", "${workspaceFolder}/config_files/node1/config.json"],
       "console": "integratedTerminal",
       "justMyCode": true
     },
@@ -31,7 +31,7 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
-      "args": ["--config", "${workspaceFolder}/config_files/node2/"],
+      "args": ["--config", "${workspaceFolder}/config_files/node2/config.json"],
       "console": "integratedTerminal",
       "justMyCode": true
     }

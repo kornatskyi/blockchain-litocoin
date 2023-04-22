@@ -12,10 +12,21 @@ def info_example():
 
 @info_routes.route("/blockchain")
 def blockchain():
+    """
+    Returns the blockchain as a JSON-encoded string.
+
+    This function creates a new `Node` instance and retrieves the blockchain from it.
+    It then converts each block in the blockchain to a JSON-encoded string and returns
+    a list of these strings as a JSON-encoded array.
+
+    Returns:
+        A `flask.Response` object with the blockchain represented as a JSON-encoded string.
+    """
     node = Node()
     blockchain_json = [block.toJSON()
                         for block in node.get_blockchain().get_blocks()]
-    return Response(json.dumps(blockchain_json)) 
+    return Response(json.dumps(blockchain_json))
+
 
 @info_routes.route("/status")
 def status():

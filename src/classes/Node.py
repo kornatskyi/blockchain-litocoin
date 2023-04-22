@@ -2,10 +2,10 @@
 import json
 from pathlib import Path
 import urllib.parse
-from src.classes.Enums import PeerStatus 
-
 # Third party libs
 import requests
+
+from src.classes.Enums import PeerStatus
 
 # My imports
 from src.classes.Singleton import Singleton
@@ -18,9 +18,11 @@ from src.utils.cryptography import sha256
 
 class Node(metaclass=Singleton):
     """
-    Represent node on a blockchain
+    Represents a node in a blockchain network.
+    Node is a singleton instance because there could be only one Node for a running server
     """
-    def __init__(self, config_dir_path:Path=None):
+
+    def __init__(self, config_dir_path: Path = None):
         # Path to configuration file with persistent information
         self._config_file_path = Path(config_dir_path) / "config.json"
         assert self._config_file_path.exists(
@@ -40,7 +42,7 @@ class Node(metaclass=Singleton):
         # Path to the file with persisted blockchain data
         self._blockchain_file_path = Path(
             REPO_PATH) / config_dir_path.__str__() / "blockchain.json"
-    
+
         assert self._blockchain_file_path.exists(
         ), f"No blockchain file in {self._blockchain_file_path.__str__()}"
 
@@ -60,18 +62,26 @@ class Node(metaclass=Singleton):
         Get nodes name
         """
         return self._name
-    
+
     def get_status(self) -> PeerStatus:
         """
         Node status getter
         """
         return self._status
-    
-    def get_port(self) -> int:
+
+    @property
+    def port(self) -> int:
         """
         Get a port for this node's server 
         """
         return self._port
+
+    @port.setter
+    def port(self, new_port: int) -> None:
+        """
+        Set a port for this node's server
+        """
+        self._port = new_port
 
     def get_blockchain(self):
         """
@@ -87,7 +97,7 @@ class Node(metaclass=Singleton):
             self._blockchain.get_last_block(), block_data, NUMBER_OF_LEADING_ZEROS)
         return new_block
 
-    def check_peers_status(self)-> dict[str, PeerStatus]:
+    def check_peers_status(self) -> dict[str, PeerStatus]:
         """
         Return status of known peers
         """
@@ -95,17 +105,18 @@ class Node(metaclass=Singleton):
         for peer_url in self._known_peers:
             try:
                 # Send request to the know peer URI, to know it's status
-                response = requests.get(urllib.parse.urljoin(peer_url, "info/status"), timeout=3)
+                response = requests.get(urllib.parse.urljoin(
+                    peer_url, "info/status"), timeout=3)
                 if response.status_code >= 200 and response.status_code < 300:
                     peers_status[peer_url] = PeerStatus.ONLINE
                 else:
                     peers_status[peer_url] = PeerStatus.OFFLINE
             except requests.exceptions.ConnectionError:
                 peers_status[peer_url] = PeerStatus.OFFLINE
-            except:
+            except requests.exceptions.HTTPError:
                 peers_status[peer_url] = PeerStatus.WRONG_RESPONSE
         return peers_status
-    
+
     def update_online_peers(self) -> None:
         """
         Check what peers are online, and updates set of online peers 
@@ -113,7 +124,7 @@ class Node(metaclass=Singleton):
         peers_by_status = self.check_peers_status()
         for (peer, status) in peers_by_status.items():
             if status == PeerStatus.ONLINE:
-                self._online_peers.add(peer) 
+                self._online_peers.add(peer)
             else:
                 self._online_peers.pop(peer)
 
@@ -124,12 +135,14 @@ class Node(metaclass=Singleton):
         blockchain_json: BlockChain
         self.update_online_peers()
         for peer_url in self._online_peers:
-            json_l =  requests.get(urllib.parse.urljoin(peer_url, "info/blockchain"), timeout=3).text
+            json_l = requests.get(urllib.parse.urljoin(
+                peer_url, "info/blockchain"), timeout=3).text
             if len(json.loads(json_l)) > len(self._blockchain.get_blocks()):
                 blockchain_json = json_l
-        
+
         if len(json.loads(blockchain_json)) > len(self._blockchain.get_blocks()):
-                self._blockchain.load_blockchain_from_the_json(blockchain_json)
+            self._blockchain.load_blockchain_from_the_json(blockchain_json)
+
 
 def generate_block(prev_block: Block, new_block_data: str, number_of_leading_zeros: int) -> Block:
     """
