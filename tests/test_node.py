@@ -15,7 +15,7 @@ class TestNode(unittest.TestCase):
 
     def test_node_initialization(self):
         self.assertIsNotNone(self.node)
-        # Assuming the default port is 5000
+        # Assuming the default port is "5000"
         self.assertEqual(self.node.port, "5000")
         self.assertIsInstance(self.node.get_blockchain(), BlockChain)
 
@@ -28,7 +28,6 @@ class TestNode(unittest.TestCase):
         self.assertEqual(new_block.block_hash, expected_hash)
         self.assertEqual(new_block.data, test_data)
 
-    # Add more test cases here...
 
 
 if __name__ == '__main__':
