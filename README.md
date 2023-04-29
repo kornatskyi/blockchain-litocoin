@@ -71,11 +71,4 @@ Contributions are welcome!
 - Add support for transactions and a simple wallet
 - Improve the API with additional endpoints and error handling
 - Enhance security and performance
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
-
-## Acknowledgements
-
-- The project is inspired by various open-source cryptocurrency projects and educational resources available online.
+- Write more tests
