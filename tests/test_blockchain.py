@@ -17,7 +17,7 @@ class TestBlockChain(unittest.TestCase):
         self.assertIsInstance(self.node.get_blockchain(), BlockChain)
 
     def test_block_chain_length(self):
-        self.assertEqual(len(self.node.get_blockchain().get_blocks()), 10)
+        self.assertEqual(len(self.node.get_blockchain().get_blocks()), 11)
 
     def test_block_chain_last_block(self):
         self.assertEqual(self.node.get_blockchain().get_last_block(),
